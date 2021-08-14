@@ -1,8 +1,8 @@
 import React from 'react';
+import Button from 'react-bootstrap/Button';
 
 
-
-class Button extends React.Component {
+class Buttonn extends React.Component {
 
   constructor(props) {
     super(props);
@@ -18,11 +18,11 @@ class Button extends React.Component {
     
     return(
       <div>
-    <button id={this.props.block.id} className={this.props.block.className} style={this.props.block.styles}
+    <Button id={this.props.block.id} className={this.props.block.className} style={this.props.block.styles}
      onClick={() => funcEmit(this.props.socket)} >
         {this.props.block.label}
-      </button>
+      </Button>
     </div>
     )
   }
-} export default Button
+} export default Buttonn

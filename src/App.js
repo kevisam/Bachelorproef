@@ -1,13 +1,11 @@
 import * as React from "react";
-import ReactDOM from "react-dom";
 import Components from "./components";
 import {data} from "./config";
 import './App.css';
 import {AddElement} from "./UImodifiers/AddElement";
-import { render } from "@testing-library/react";
 import Test from "./UImodifiers/SocketIO";
-//import 'bootstrap/dist/css/bootstrap.min.css';
-//import Button from 'react-bootstrap/Button';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Button from 'react-bootstrap/Button';
 
 
 import io from "socket.io-client";
@@ -17,8 +15,6 @@ const {Engine} = require('json-rules-engine');
 
 var idx= 0;
 let engine = new Engine();
-
-const listOfElements = [];
 
 engine.addOperator('smallerThan', (factValue, jsonValue) => {
     return factValue < jsonValue
@@ -266,7 +262,8 @@ printEl(id) {
       <div className="App">
         <h1>Adaptive Distributable User Interface</h1>
         <div>
-        <select
+        <label for="name"> Select element</label>
+        <select className="form-select"
         value={this.state.selectValue} 
         onChange={evt => this.handleSelectedValue(evt)}>
           <option value="button">Button</option>
@@ -281,7 +278,7 @@ printEl(id) {
         
         <div>
           <label for="name"> Label </label>
-          <input type="text" value={this.state.inputlabel} onChange= {evt => this.handleLabel(evt)}></input>
+          <input className="form-control" type="text" value={this.state.inputlabel} onChange= {evt => this.handleLabel(evt)}></input>
         </div>
 
         <div>
@@ -291,31 +288,31 @@ printEl(id) {
 
         <div>
           <label for="onClick">Onclick Function</label>
-          <input type="text" value={this.state.inputOnclick} onChange= {evt => this.handleOnclick(evt)}></input>
+          <input className="form-control" type="text" value={this.state.inputOnclick} onChange= {evt => this.handleOnclick(evt)}></input>
         </div>
         
         </div>
 
         <div>
-        <button onClick={() =>this.handleClick()}>Create Element</button>
+        <Button onClick={() =>this.handleClick()}>Create Element</Button>
         </div>
 
         <div>
 
         <h3> UI controls</h3>
           <label for="className">ID of element</label>
-          <input type="text" value={this.state.inputclassName} onChange= {evt => this.handleChangeclassName(evt)}></input>
+          <input className="form-control"  type="text" value={this.state.inputclassName} onChange= {evt => this.handleChangeclassName(evt)}></input>
           <div>
-          <button variant="outline-primary"  onClick = { () => this.deleteElement(this.state.inputclassName)}> Delete element</button>
-          <button onClick = { () => this.printEl(this.state.inputclassName)}> Print element </button>
+          <Button onClick = { () => this.deleteElement(this.state.inputclassName)}> Delete element</Button>
+          <Button onClick = { () => this.printEl(this.state.inputclassName)}> Print element </Button>
           <Test socket={socket} id={this.state.inputclassName} />
           </div>
 
           <div>
           <h3>Adaptation and distribution</h3>      
-          <button onClick = { () => this.rerender()}> Rerender UI</button>
-          <button onClick = { () => this.runAdaptationEngine()}> Run adaptation </button>
-          <button onClick = { () => this.printJSON()}> PRINT JSON</button>
+          <Button onClick = { () => this.rerender()}> Rerender UI</Button>
+          <Button onClick = { () => this.runAdaptationEngine()}> Run adaptation </Button>
+          <Button onClick = { () => this.printJSON()}> PRINT JSON</Button>
           </div>
         </div>
 

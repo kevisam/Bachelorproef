@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import {data} from '../config';
-import io from 'socket.io-client/dist/socket.io';
+import Button from 'react-bootstrap/Button';
 
 
 function Test({socket,id}) {
@@ -56,8 +56,8 @@ function Test({socket,id}) {
 
     return(
         <div>
-            <button onClick= { () => SendUI()}> Send UI </button>
-            <button onClick = { () => SendElement(id)}> Send Element</button>
+            <Button  onClick= { () => SendUI()}> Send UI </Button>
+            <Button onClick = { () => SendElement(id)}> Send Element</Button>
          
         </div>
         );

@@ -1,17 +1,18 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {useEffect} from "react";
 import {data} from '../config';
 import Button from 'react-bootstrap/Button';
 
 
-function Test({socket,id}) {
+function SocketIO({socket,id}) {
     
     const SendUI = () =>  {
         socket.emit("SendUI", data);
+        console.log("Ui sent to other devices");
     }
 
     
     const SendElement = (id) =>  {
-        const el = data.content.body.find(e => e.id == id);
+        const el = data.content.body.find(e => e.id === id);
 
         if(el != null) {
             socket.emit("SendElement",el);
@@ -21,23 +22,27 @@ function Test({socket,id}) {
         }
     }
      
-    console.log("Ui sent to other devices");
 
     useEffect(()=> {
+        //We use useEffect to ensure that the emitted signal is received only once
+
         socket.on("ReceiveUI", message => {
 
             data.content = message.content;
+
+            console.log("UI received:")
             console.log(JSON.stringify(data));
          });
 
          
         socket.on("LISTEN-Clicked", (btnid) => {
-            const el = data.content.body.find(e => e.id == btnid);
+            const el = data.content.body.find(e => e.id === btnid);
             console.log("Received click");
             if(el != null){
-                let func = new Function(el.onClick);
-                func();  
-            }
+                // eslint-disable-next-line
+                    let func = new Function(el.onClick);
+                    func();
+            } 
         })
   
 
@@ -52,16 +57,16 @@ function Test({socket,id}) {
 
         socket.on("err", (err) => console.log(err));
         socket.on("success", (res) => console.log(res));
-    })
+    },[socket])
 
     return(
         <div>
-            <Button  onClick= { () => SendUI()}> Send UI </Button>
-            <Button onClick = { () => SendElement(id)}> Send Element</Button>
+            <Button className = "button"  onClick= { () => SendUI()}> Send UI </Button>
+            <Button className = "button" onClick = { () => SendElement(id)}> Send Element</Button>
          
         </div>
         );
   }
 
 
-export default Test;
+export default SocketIO;

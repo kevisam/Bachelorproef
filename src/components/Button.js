@@ -13,12 +13,13 @@ class Buttonn extends React.Component {
 
 
   render () {
+    // eslint-disable-next-line
     let funcEmit = new Function('socket',"socket.emit('SEND-Clicked', '" + this.props.block.id + "');" + this.props.block.onClick);
-    let func = new Function(this.props.block.onClick);
+    //let func = new Function(this.props.block.onClick);
     
     return(
       <div>
-    <Button id={this.props.block.id} className={this.props.block.className} style={this.props.block.styles}
+    <Button  key={this.props.block.id} id={this.props.block.id} className={this.props.block.className} style={this.props.block.styles}
      onClick={() => funcEmit(this.props.socket)} >
         {this.props.block.label}
       </Button>

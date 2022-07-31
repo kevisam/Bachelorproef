@@ -3,7 +3,6 @@ import { data } from "../config";
 
 export function AddElement(component,id,style,onClick,label,socket) {
     console.log(data);
-    var string = "{component: " + component + ", " + "id: " + id + ", " + ", " + "styles: " + style + "}";
 
     var myObj;
 

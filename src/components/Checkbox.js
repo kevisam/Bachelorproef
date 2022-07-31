@@ -1,5 +1,4 @@
-import React, { useContext } from 'react'
-import { FormContext } from '.././FormContext';
+import React from 'react'
 
 class Checkbox extends React.Component{
 

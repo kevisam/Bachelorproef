@@ -3,7 +3,7 @@ import Components from "./components";
 import {data} from "./config";
 import './App.css';
 import {AddElement} from "./UImodifiers/AddElement";
-import Test from "./UImodifiers/SocketIO";
+import SocketIO from "./UImodifiers/SocketIO";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 
@@ -108,7 +108,7 @@ class App extends React.Component{
 
   
   giveIndex(){
-
+ // returns a unique id 
     const checkIdx = (id) => {
       if (data.content.body.findIndex(e => e.id === id) === -1) {
       return true;
@@ -142,7 +142,7 @@ class App extends React.Component{
     engine
     .run(facts)
     .then(({ events }) => {
-    events.map(event => {
+    events.forEach(event => {  // put foreach instead of map 
       console.log(event.params.message);
       if(event.type === 'DarkTheme'){
         document.documentElement.setAttribute("data-theme","dark");
@@ -238,7 +238,7 @@ class App extends React.Component{
   };
 
   deleteElement(id){
-    const idx = data.content.body.findIndex(e => e.id == id);
+    const idx = data.content.body.findIndex(e => e.id === id);
     
     if(idx === -1){
       console.log("Element not found : " + id);
@@ -262,7 +262,7 @@ printEl(id) {
       <div className="App">
         <h1>Adaptive Distributable User Interface</h1>
         <div>
-        <label for="name"> Select element</label>
+        <label htmlFor="name"> Select element</label>
         <select className="form-select"
         value={this.state.selectValue} 
         onChange={evt => this.handleSelectedValue(evt)}>
@@ -277,42 +277,42 @@ printEl(id) {
 
         
         <div>
-          <label for="name"> Label </label>
-          <input className="form-control" type="text" value={this.state.inputlabel} onChange= {evt => this.handleLabel(evt)}></input>
+          <label htmlFor="name"> Label </label>
+          <input className="form-control" type="text" placeholder="ex. Volume Up" value={this.state.inputlabel} onChange= {evt => this.handleLabel(evt)}></input>
         </div>
 
         <div>
-          <label for="name">Styles (in JSON string format)</label>
+          <label htmlFor="name">Styles (in JSON string format)</label>
           <textarea name="Text1" cols="40" rows="5" defaultValue= "{}" style= {{display:"block"}} onChange={evt => this.handleChangestyle(evt)} ></textarea>
         </div>
 
         <div>
-          <label for="onClick">Onclick Function</label>
+          <label htmlFor="onClick">Onclick Function</label>
           <input className="form-control" type="text" value={this.state.inputOnclick} onChange= {evt => this.handleOnclick(evt)}></input>
         </div>
         
         </div>
 
         <div>
-        <Button onClick={() =>this.handleClick()}>Create Element</Button>
+        <Button className = "button" onClick={() =>this.handleClick()}>Create Element</Button>
         </div>
 
         <div>
 
         <h3> UI controls</h3>
-          <label for="className">ID of element</label>
+          <label htmlFor="className">ID of element</label>
           <input className="form-control"  type="text" value={this.state.inputclassName} onChange= {evt => this.handleChangeclassName(evt)}></input>
           <div>
-          <Button onClick = { () => this.deleteElement(this.state.inputclassName)}> Delete element</Button>
-          <Button onClick = { () => this.printEl(this.state.inputclassName)}> Print element </Button>
-          <Test socket={socket} id={this.state.inputclassName} />
+          <Button className = "button" onClick = { () => this.deleteElement(this.state.inputclassName)}> Delete element</Button>
+          <Button className = "button" onClick = { () => this.printEl(this.state.inputclassName)}> Print element </Button>
+          <SocketIO socket={socket} id={this.state.inputclassName} />
           </div>
 
           <div>
           <h3>Adaptation and distribution</h3>      
-          <Button onClick = { () => this.rerender()}> Rerender UI</Button>
-          <Button onClick = { () => this.runAdaptationEngine()}> Run adaptation </Button>
-          <Button onClick = { () => this.printJSON()}> PRINT JSON</Button>
+          <Button className = "button" onClick = { () => this.rerender()}> Rerender UI</Button>
+          <Button className = "button" onClick = { () => this.runAdaptationEngine()}> Run adaptation </Button>
+          <Button className = "button" onClick = { () => this.printJSON()}> PRINT JSON</Button>
           </div>
         </div>
 

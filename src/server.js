@@ -31,7 +31,7 @@ const buttonRooms = [];
 
 //initializing the socket io connection 
 io.on("connection", (socket) => {
-  //  console.log(socket.id);
+    console.log(socket.id);
 
     socket.on("SendUI", (message) => {
         console.log("configuration data  :" + JSON.stringify(message.content['body']));
@@ -53,7 +53,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("SEND-Clicked", (btnid) => {
-      console.log("Clicked button")
+      console.log("Clicked button " + btnid);
       socket.broadcast.emit("LISTEN-Clicked",btnid);
     })
 

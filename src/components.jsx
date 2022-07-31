@@ -19,7 +19,7 @@ const Components = {
   h1: Header
 };
 
-
+// eslint-disable-next-line
 export default (block,socket) => {
   if (typeof Components[block.component] !== "undefined") {
     return React.createElement(Components[block.component], {

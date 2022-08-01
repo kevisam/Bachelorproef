@@ -100,6 +100,12 @@ engine.addRule({
 
 class App extends React.Component{
 
+
+    //////////////////////////
+   ////  App functions //////
+  //////////////////////////
+
+
   updateFacts(){
     facts.ScreenWidth = window.innerWidth;
     facts.DarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -133,7 +139,9 @@ class App extends React.Component{
       selectValue: "button",
       inputOnclick:'',
       inputLabel:'',
-      rerender: false
+      inputgroup:'',
+      rerender: false,
+      inputid: ''
     };
   }
 
@@ -162,7 +170,9 @@ class App extends React.Component{
       selectValue: this.state.selectValue,
       inputOnclick: this.state.inputOnclick,
       inputLabel: this.state.inputLabel,
-      rerender: 'rerender'});
+      inputgroup: this.state.inputgroup,
+      rerender: 'rerender',
+      inputid: this.state.inputid});
     }
 
     rerender(e){
@@ -171,7 +181,9 @@ class App extends React.Component{
       selectValue: this.state.selectValue,
       inputOnclick: this.state.inputOnclick,
       inputLabel: this.state.inputLabel,
-      rerender: this.state.rerender });
+      inputgroup: this.state.inputgroup,
+      rerender: this.state.rerender,
+      inputid: this.state.inputid });
     }
 
   handleChangestyle(e) {
@@ -181,7 +193,9 @@ class App extends React.Component{
       selectValue: this.state.selectValue,
       inputOnclick: this.state.inputOnclick,
       inputLabel: this.state.inputLabel,
-      rerender: this.state.rerender});
+      inputgroup: this.state.inputgroup,
+      rerender: this.state.rerender,
+      inputid: this.state.inputid});
   }
 
   handleChangeclassName(e) {
@@ -191,7 +205,9 @@ class App extends React.Component{
       selectValue: this.state.selectValue,
       inputOnclick: this.state.inputOnclick,
       inputLabel: this.state.inputLabel,
-      rerender: this.state.rerender
+      inputgroup: this.state.inputgroup,
+      rerender: this.state.rerender,
+      inputid: this.state.inputid
     });
   }
 
@@ -202,7 +218,22 @@ class App extends React.Component{
       selectValue: this.state.selectValue,
       inputOnclick: this.state.inputOnclick,
       inputLabel: e.target.value,
-      rerender: this.state.rerender
+      inputgroup: this.state.inputgroup,
+      rerender: this.state.rerender,
+      inputid: this.state.inputid
+    });
+  }
+
+  handleGroup(e) {
+    this.setState({ 
+      inputclassName: this.state.inputclassName ,
+      inputstyle: this.state.inputstyle,
+      selectValue: this.state.selectValue,
+      inputOnclick: this.state.inputOnclick,
+      inputLabel: this.state.inputLabel,
+      inputgroup: e.target.value,
+      rerender: this.state.rerender,
+      inputid: this.state.inputid
     });
   }
 
@@ -213,7 +244,9 @@ class App extends React.Component{
       selectValue: e.target.value,
       inputOnclick: this.state.inputOnclick,
       inputLabel: this.state.inputLabel,
-      rerender: this.state.rerender});
+      inputgroup: this.state.inputgroup,
+      rerender: this.state.rerender,
+      inputid: this.state.inputid});
   }
 
   
@@ -224,13 +257,37 @@ class App extends React.Component{
       selectValue: this.state.selectValue,
       inputOnclick: e.target.value,
       inputLabel: this.state.inputLabel,
-      rerender: this.state.rerender});
+      inputgroup: this.state.inputgroup,
+      rerender: this.state.rerender,
+      inputid: this.state.inputid});
+  }
+
+  handleId(e){
+    this.setState({ 
+      inputclassName: this.state.inputclassName,
+      inputstyle: this.state.inputstyle,
+      selectValue: this.state.selectValue,
+      inputOnclick: this.state.inputOnclick,
+      inputLabel: this.state.inputLabel,
+      inputgroup: this.state.inputgroup,
+      rerender: this.state.rerender,
+      inputid: e.target.value,});
   }
 
 
+
+
   handleClick = () => {
-    const id = this.giveIndex();
-    AddElement(this.state.selectValue,id,JSON.parse(this.state.inputstyle),this.state.inputOnclick,this.state.inputLabel);
+
+    var id = ''
+
+    if(this.state.inputid === ''){
+      id = this.giveIndex();
+    } else {
+      id = this.state.inputid
+    }
+    
+    AddElement(this.state.selectValue,this.state.inputgroup,id,JSON.parse(this.state.inputstyle),this.state.inputOnclick,this.state.inputLabel);
 
     socket.emit('makeRoom', id);
     this.rerender();
@@ -248,6 +305,7 @@ class App extends React.Component{
     }
   }
 
+  // Change these so they don't print in the console, but in a separate window ?
 printJSON() {
   console.log(data);
 }
@@ -256,7 +314,9 @@ printEl(id) {
   const idx = data.content.body.findIndex(e => e.id === id);
   console.log(data.content.body[idx]);
 }
-  
+    
+
+ // The render funcion is used to render the UI elements of the App.
  render () {
     return (
       <div className="App">
@@ -275,10 +335,19 @@ printEl(id) {
           <option value="h1"> Header</option>
         </select>
 
-        
+        <div>
+          <label htmlFor="name"> id </label>
+          <input className="form-control" type="text" placeholder="header-text1" value={this.state.inputid} onChange= {evt => this.handleId(evt)}></input>
+        </div>
+
         <div>
           <label htmlFor="name"> Label </label>
           <input className="form-control" type="text" placeholder="ex. Volume Up" value={this.state.inputlabel} onChange= {evt => this.handleLabel(evt)}></input>
+        </div>
+
+        <div>
+          <label htmlFor="name"> Element group </label>
+          <input className="form-control" type="text" placeholder="G1" value={this.state.inputlabel} onChange= {evt => this.handleGroup(evt)}></input>
         </div>
 
         <div>
@@ -305,7 +374,7 @@ printEl(id) {
           <div>
           <Button className = "button" onClick = { () => this.deleteElement(this.state.inputclassName)}> Delete element</Button>
           <Button className = "button" onClick = { () => this.printEl(this.state.inputclassName)}> Print element </Button>
-          <SocketIO socket={socket} id={this.state.inputclassName} />
+          <SocketIO socket={socket} id={this.state.inputclassName} group ={this.state.inputgroup} />
           </div>
 
           <div>

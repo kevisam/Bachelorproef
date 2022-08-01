@@ -68,10 +68,13 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `yarn build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
 # Bachelorproef
 
-
 To run the code :
-1) Open one terminal and go to Bachelorproef/src
-2) run command : node server.js
-3) run command : yarn start
+
+1. run command : npm install
+2. Open one terminal and go to Bachelorproef/src
+3. run command : node server.js
+4. Open another terminal
+5. run command : yarn start or npm start

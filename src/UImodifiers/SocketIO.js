@@ -3,7 +3,7 @@ import {data} from '../config';
 import Button from 'react-bootstrap/Button';
 
 
-function SocketIO({socket,id}) {
+function SocketIO({socket,id,group}) {
     
     const SendUI = () =>  {
         socket.emit("SendUI", data);
@@ -20,6 +20,18 @@ function SocketIO({socket,id}) {
         }else {
             console.log("Element with id:'" + id + "' not found.")
         }
+    }
+
+
+    // TODO : SendGroup function
+
+    const SendGroup = (group) =>  {
+
+        const tosend = data.content.body.filter(e => e.group === group);
+        
+        tosend.forEach(el => {
+            socket.emit("SendElement",el);
+        });
     }
      
 
@@ -63,6 +75,7 @@ function SocketIO({socket,id}) {
         <div>
             <Button className = "button"  onClick= { () => SendUI()}> Send UI </Button>
             <Button className = "button" onClick = { () => SendElement(id)}> Send Element</Button>
+            <Button className = "button" onClick = { () => SendGroup(group)}> Send group</Button>
          
         </div>
         );

@@ -5,7 +5,8 @@ import Button from 'react-bootstrap/Button';
 class Buttonn extends React.Component {
 
   constructor(props) {
-    super(props);
+    // Used to pass arguments to this component when we create the element.
+    super(props); 
     this.state = {value: ''};
     this.props.socket.emit("makeRoom", this.props.block.id);
   }

@@ -19,6 +19,8 @@ const Components = {
   h1: Header
 };
 
+// This function is used to actually create components based of the JSON representation of it.
+
 // eslint-disable-next-line
 export default (block,socket) => {
   if (typeof Components[block.component] !== "undefined") {

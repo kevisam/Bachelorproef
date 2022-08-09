@@ -1,7 +1,7 @@
 import { data } from "../config";
 
 
-export function AddElement(component,group,id,style,onClick,label,socket) {
+export function AddElement(component,group,id,style,onClick,label) {
     console.log(data);
 
     var myObj;
@@ -14,6 +14,9 @@ export function AddElement(component,group,id,style,onClick,label,socket) {
                 "group" : group,
                 "id" : id,
                 "styles" : style,
+                "styles_desktop" : style,
+                "styles_tablet" : style,
+                "styles_smartphone" : style,
                 "onClick" : onClick,
                 "label" : label,    
                  }
@@ -29,6 +32,16 @@ export function AddElement(component,group,id,style,onClick,label,socket) {
                  }
                  break;
         case "li":
+            myObj = {
+                "component" : component,
+                "group" : group,
+                "id" : id,
+                "styles" : style,
+                "children" : [],
+                "label" : label
+                 }
+                 break;
+        case "div":
             myObj = {
                 "component" : component,
                 "group" : group,

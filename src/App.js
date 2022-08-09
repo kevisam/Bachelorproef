@@ -9,9 +9,15 @@ import Button from 'react-bootstrap/Button';
 
 
 import io from "socket.io-client";
+import Select from "./components/Select";
+
+import { Resizable } from "re-resizable";
 
 const socket = io.connect('/');
 const {Engine} = require('json-rules-engine');
+
+//test
+
 
 var idx= 0;
 let engine = new Engine();
@@ -141,7 +147,10 @@ class App extends React.Component{
       inputLabel:'',
       inputgroup:'',
       rerender: false,
-      inputid: ''
+      inputid: '',
+      selectdevice: "Desktop",
+      canvaswidth: '200',
+      canvasheight: '320'
     };
   }
 
@@ -172,18 +181,36 @@ class App extends React.Component{
       inputLabel: this.state.inputLabel,
       inputgroup: this.state.inputgroup,
       rerender: 'rerender',
-      inputid: this.state.inputid});
+      inputid: this.state.inputid,
+      selectdevice: this.state.selectdevice});
+      
     }
 
     rerender(e){
+      if(this.state.selectdevice === "Desktop"){
+        data.content.body.map(e => e.styles = e.styles_desktop);
+      }
+      
+      if (this.state.selectdevice === "Tablet"){
+        data.content.body.map(e => e.styles = e.styles_tablet);
+      }
+      
+      if (this.state.selectdevice === "Smartphone") {
+        data.content.body.map(e=> e.styles = e.styles_smartphone);
+      }
+
+
       this.setState({ inputclassName: this.state.inputclassName ,
       inputstyle: this.state.inputstyle,
       selectValue: this.state.selectValue,
       inputOnclick: this.state.inputOnclick,
       inputLabel: this.state.inputLabel,
       inputgroup: this.state.inputgroup,
-      rerender: this.state.rerender,
-      inputid: this.state.inputid });
+      rerender: this.state.rerender, 
+      inputid: this.state.inputid,
+      selectdevice: this.state.selectdevice,
+      canvaswidth: this.state.canvaswidth,
+      canvasheight: this.state.canvasheight });
     }
 
   handleChangestyle(e) {
@@ -195,7 +222,10 @@ class App extends React.Component{
       inputLabel: this.state.inputLabel,
       inputgroup: this.state.inputgroup,
       rerender: this.state.rerender,
-      inputid: this.state.inputid});
+      inputid: this.state.inputid,
+      selectdevice: this.state.selectdevice,
+      canvaswidth: this.state.canvaswidth,
+      canvasheight: this.state.canvasheight});
   }
 
   handleChangeclassName(e) {
@@ -207,7 +237,10 @@ class App extends React.Component{
       inputLabel: this.state.inputLabel,
       inputgroup: this.state.inputgroup,
       rerender: this.state.rerender,
-      inputid: this.state.inputid
+      inputid: this.state.inputid,
+      selectdevice: this.state.selectdevice,
+      canvaswidth: this.state.canvaswidth,
+      canvasheight: this.state.canvasheight
     });
   }
 
@@ -220,7 +253,10 @@ class App extends React.Component{
       inputLabel: e.target.value,
       inputgroup: this.state.inputgroup,
       rerender: this.state.rerender,
-      inputid: this.state.inputid
+      inputid: this.state.inputid,
+      selectdevice: this.state.selectdevice,
+      canvaswidth: this.state.canvaswidth,
+      canvasheight: this.state.canvasheight
     });
   }
 
@@ -233,7 +269,10 @@ class App extends React.Component{
       inputLabel: this.state.inputLabel,
       inputgroup: e.target.value,
       rerender: this.state.rerender,
-      inputid: this.state.inputid
+      inputid: this.state.inputid,
+      selectdevice: this.state.selectdevice,
+      canvaswidth: this.state.canvaswidth,
+      canvasheight: this.state.canvasheight
     });
   }
 
@@ -246,7 +285,25 @@ class App extends React.Component{
       inputLabel: this.state.inputLabel,
       inputgroup: this.state.inputgroup,
       rerender: this.state.rerender,
-      inputid: this.state.inputid});
+      inputid: this.state.inputid,
+      selectdevice: this.state.selectdevice,
+      canvaswidth: this.state.canvaswidth,
+      canvasheight: this.state.canvasheight});
+  }
+
+  handleSelecteddevice(e) {
+    this.setState({ 
+      inputclassName: this.state.inputclassName,
+      inputstyle: this.state.inputstyle,
+      selectValue: this.state.selectValue,
+      inputOnclick: this.state.inputOnclick,
+      inputLabel: this.state.inputLabel,
+      inputgroup: this.state.inputgroup,
+      rerender: this.state.rerender,
+      inputid: this.state.inputid,
+      selectdevice: e.target.value,
+      canvaswidth: this.state.canvaswidth,
+      canvasheight: this.state.canvasheight});
   }
 
   
@@ -259,7 +316,10 @@ class App extends React.Component{
       inputLabel: this.state.inputLabel,
       inputgroup: this.state.inputgroup,
       rerender: this.state.rerender,
-      inputid: this.state.inputid});
+      inputid: this.state.inputid,
+      selectdevice: this.state.selectdevice,
+      canvaswidth: this.state.canvaswidth,
+      canvasheight: this.state.canvasheight});
   }
 
   handleId(e){
@@ -271,7 +331,10 @@ class App extends React.Component{
       inputLabel: this.state.inputLabel,
       inputgroup: this.state.inputgroup,
       rerender: this.state.rerender,
-      inputid: e.target.value,});
+      inputid: e.target.value,
+      selectdevice: this.state.selectdevice,
+      canvaswidth: this.state.canvaswidth,
+      canvasheight: this.state.canvasheight});
   }
 
 
@@ -305,6 +368,45 @@ class App extends React.Component{
     }
   }
 
+  addToDiv(){
+    var id  = ''
+    if(this.state.inputid === ''){
+      id = this.giveIndex();
+    } else {
+      id = this.state.inputid
+    }
+    
+    AddElement(this.state.selectValue,this.state.inputgroup,id,JSON.parse(this.state.inputstyle),this.state.inputOnclick,this.state.inputLabel);
+
+    socket.emit('makeRoom', id);
+    this.rerender();
+
+    data.content.body.find(e => e.id === id).children.push(id);
+  }
+
+  changeStyle(){ // Changes for the bigger screens affect the smaller ones, 
+    //but changes in the smaller screens do not affect the bigger ones
+
+    if(this.state.inputid === ""){
+      console.log("Give a proper id ")
+    }else {
+      const element = data.content.body.find(e => e.id === this.state.inputid)
+      if(this.state.selectdevice === "Desktop"){
+        element.styles = JSON.parse(this.state.inputstyle)
+        element.styles_desktop = JSON.parse(this.state.inputstyle)
+        element.styles_tablet = JSON.parse(this.state.inputstyle)
+        element.styles_smartphone = JSON.parse(this.state.inputstyle)
+      }else if(this.state.selectdevice === "Tablet"){
+        element.styles_tablet = JSON.parse(this.state.inputstyle)
+        element.styles_smartphone = JSON.parse(this.state.inputstyle)
+      }else {
+        element.styles_smartphone = JSON.parse(this.state.inputstyle)
+      }
+    }
+  }
+
+
+
   // Change these so they don't print in the console, but in a separate window ?
 printJSON() {
   console.log(data);
@@ -333,6 +435,16 @@ printEl(id) {
           <option value="checkbox">Checkbox</option>
           <option value="p">Text</option>
           <option value="h1"> Header</option>
+          <option value="div"> Div</option>
+        </select>
+
+        <label htmlFor="name"> Select device type</label>
+        <select className="form-select"
+        value={this.state.selectdevice} 
+        onChange={evt => this.handleSelecteddevice(evt)}>
+          <option value="Desktop">Desktop</option>
+          <option value="Tablet">Tablet</option>
+          <option value="Smartphone">Smartphone</option>
         </select>
 
         <div>
@@ -376,6 +488,12 @@ printEl(id) {
           <Button className = "button" onClick = { () => this.printEl(this.state.inputclassName)}> Print element </Button>
           <SocketIO socket={socket} id={this.state.inputclassName} group ={this.state.inputgroup} />
           </div>
+          <Button className = "button" onClick = { () => this.addToDiv(this.state.inputid)}> Add to div</Button>
+          <Button className = "button" onClick = { () => this.changeStyle()}> Update style</Button>
+          <div>
+
+
+          </div>
 
           <div>
           <h3>Adaptation and distribution</h3>      
@@ -386,13 +504,36 @@ printEl(id) {
         </div>
 
         <div> <h2> My UI </h2></div>
-        <div className = "container">
+        
+        <div ref="uicontainer" className = "container">
 
         {data.content.body.map(block => Components(block,socket))}
 
-        </div>
+        </div> 
         
 
+        {/*  <Resizable
+         style={{ marginLeft: 10, marginTop: 10, border: "1px solid black" }}
+         size={{ width: this.state.canvaswidth, height: this.state.canvasheight }}
+         onResizeStop={(e, direction, ref, d) => {
+
+          this.setState({ 
+            inputclassName: this.state.inputclassName,
+            inputstyle: this.state.inputstyle,
+            selectValue: this.state.selectValue,
+            inputOnclick: this.state.inputOnclick,
+            inputLabel: this.state.inputLabel,
+            inputgroup: this.state.inputgroup,
+            rerender: this.state.rerender,
+            inputid: this.state.inputid,
+            selectdevice: this.state.selectdevice,
+            canvaswidth: this.state.canvaswidth + d.width,
+            canvasheight: this.state.canvasheight + d.height});
+            }}>
+         {data.content.body.map(block => Components(block,socket))}
+      
+         </Resizable>*/}
+       
       </div>
     );
   }

@@ -14,6 +14,14 @@ body {
   color: var(--text-color);
 }*/
 
+.text-box {
+  border: black 2px solid;
+  border-radius: 3px;
+  text-align: left;
+  padding-left: 10px;
+  max-width: 50%;
+}
+
 
 .container {
   border: 3px solid var(--text-color);

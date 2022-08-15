@@ -22,6 +22,8 @@ const {Engine} = require('json-rules-engine');
 var idx= 0;
 let engine = new Engine();
 
+var textoutput = "This box contains "
+
 engine.addOperator('smallerThan', (factValue, jsonValue) => {
     return factValue < jsonValue
   })
@@ -104,7 +106,14 @@ engine.addRule({
   }
 })
 
+function TextBoxContent() {
+
+  return textoutput
+}
+
 class App extends React.Component{
+
+  
 
 
     //////////////////////////
@@ -361,7 +370,9 @@ class App extends React.Component{
     const idx = data.content.body.findIndex(e => e.id === id);
     
     if(idx === -1){
+      textoutput = "Element not found : " + id
       console.log("Element not found : " + id);
+      this.rerender()
     }else {
       data.content.body.splice(idx,1);
       this.rerender();
@@ -409,12 +420,17 @@ class App extends React.Component{
 
   // Change these so they don't print in the console, but in a separate window ?
 printJSON() {
-  console.log(data);
+  textoutput = JSON.stringify(data)
+  //console.log(data);
+  this.rerender()
 }
 
 printEl(id) {
   const idx = data.content.body.findIndex(e => e.id === id);
+
+  textoutput = JSON.stringify(data.content.body[idx])
   console.log(data.content.body[idx]);
+  this.rerender()
 }
     
 
@@ -481,11 +497,10 @@ printEl(id) {
         <div>
 
         <h3> UI controls</h3>
-          <label htmlFor="className">ID of element</label>
-          <input className="form-control"  type="text" value={this.state.inputclassName} onChange= {evt => this.handleChangeclassName(evt)}></input>
+          
           <div>
-          <Button className = "button" onClick = { () => this.deleteElement(this.state.inputclassName)}> Delete element</Button>
-          <Button className = "button" onClick = { () => this.printEl(this.state.inputclassName)}> Print element </Button>
+          <Button className = "button" onClick = { () => this.deleteElement(this.state.inputid)}> Delete element</Button>
+          <Button className = "button" onClick = { () => this.printEl(this.state.inputid)}> Print element </Button>
           <SocketIO socket={socket} id={this.state.inputclassName} group ={this.state.inputgroup} />
           </div>
           <Button className = "button" onClick = { () => this.addToDiv(this.state.inputid)}> Add to div</Button>
@@ -502,6 +517,13 @@ printEl(id) {
           <Button className = "button" onClick = { () => this.printJSON()}> PRINT JSON</Button>
           </div>
         </div>
+
+        <h1>Information textbox</h1>
+        <div  className="text-box" > 
+        <p>
+        <TextBoxContent/>
+        </p>
+           </div>
 
         <div> <h2> My UI </h2></div>
         
